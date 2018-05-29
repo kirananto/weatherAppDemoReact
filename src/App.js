@@ -3,6 +3,7 @@ import React from 'react'
 import Titles from './components/Titles'
 import Form from './components/Form'
 import Weather from './components/Weather'
+import Map from './components/Map'
 
 const API_KEY = '7f03d2e36cec864dc1796c6c4c2927ac'
 
@@ -13,6 +14,8 @@ class App extends React.Component {
         city: undefined,
         country: undefined,
         humidity: undefined,
+        lat: undefined,
+        lon: undefined,
         description: undefined,
         error: undefined
     }
@@ -23,11 +26,14 @@ class App extends React.Component {
         const country = e.target.elements.country.value
         const api_call = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}&units=metric`)
         const data = await api_call.json()
+        console.log(data)
         if (city && country) {
             this.setState({
                 temperature: data.main.temp,
                 city: data.name,
                 country: data.sys.country,
+                lat: data.coord.lat,
+                lon: data.coord.lon,
                 humidity: data.main.humidity,
                 description: data.weather[0].description,
                 error: ""
@@ -40,6 +46,8 @@ class App extends React.Component {
                 country: undefined,
                 humidity: undefined,
                 description: undefined,
+                lat: undefined,
+                lon: undefined,
                 error: 'Please Enter the value'
             })
         }
@@ -64,6 +72,7 @@ class App extends React.Component {
                                         humidity={this.state.humidity}
                                         description={this.state.description}
                                         error={this.state.error}/>
+                                    { this.state.lat && this.state.lon && <Map styles={{ height: '100%' }} lat={this.state.lat} lon={this.state.lon}/> }
                                 </div>
                             </div>
                         </div>
